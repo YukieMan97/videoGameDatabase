@@ -1,0 +1,142 @@
+DELETE Operation
+Implement a cascade-on-delete situation (or an alternative that was agreed to by the TA
+if the DB system doesn’t provide this).
+Provide an interface for the user to specify some input for the deletion operation.
+
+Warrior deletes their character/Cascades to PlayerCharacter
+
+DELETE FROM Warrior WHERE ID = ?;
+
+ON DELETE CASCADE TABLES
+Completes
+Assassin
+Warrior
+Mage
+
+
+
+
+
+
+Selection
+Create one query of this category and provide an interface for the user to specify the values of the selection
+conditions to be returned.
+Example:
+
+SELECT ...
+FROM ...
+WHERE Field1 = :Var1 AND Field2 > :Var2
+
+Selection of items held sold by the Shop
+
+SELECT ItemID, Price, Stats
+FROM Item_Equips_Sells as i
+WHERE i.ShopName = ? AND i.LocationName = ?
+
+
+
+
+
+Join
+Create one query in this category, which joins at least 2 tables and performs a meaningful query, and
+provide an interface for the user to execute this query. The user must provide at least one
+value to qualify in the WHERE clause (e.g. join the Customer and the Transaction table to find
+the names and phone numbers of all customers who have purchased a specific item).
+
+Join Location and Shop_IsIn to find all shops that are located in a given location
+
+SELECT ShopName, Type
+FROM Shop_IsIn as s, Location as l
+WHERE s.LocationName = l.Name AND s.LocationName = ? AND l.Name = ?
+
+
+
+
+
+
+
+Aggregation with Having
+Create one meaningful query that requires
+the use of a HAVING clause, and provide an interface
+(e.g., HTML 1 button/dropdown, etc.) for the user to execute this query.
+
+Group Monster_isAt by location where each monster is having > 60 MonsterLevel (High Level)
+
+SELECT Race, Type, MonsterLevel, LocationName
+FROM Monster_isAt
+GROUP BY LocationName
+HAVING MonsterLevel > 60
+
+
+
+
+
+
+
+Division
+Create one query of this category and provide an interface (i.e.,
+HTML button, etc.) for the user to execute this query (e.g., find all the 1 customers who bought all the items).
+
+Which players has completed all locations
+
+SELECT c.PlayerID
+FROM Completes as c
+WHERE NOT EXISTS (
+SELECT *
+FROM Completes as c1
+WHERE NOT EXISTS (
+SELECT *
+FROM Completes as c2
+WHERE (c1.LocationName = c2.LocationName) AND (c1.PlayerID = c2.PlayerID)))
+
+
+deleteGivenWarrior(String playerID)
+viewItemsInStockAtStore(String shopName, String location)
+storesInLocation(String location)
+strongMonstersByLocation()
+completedAllLocations()
+
+-----------------------------------REDO OF QUERIES----------------------------------------------
+March 25 2021
+
+DELETE
+Remains as the same query as before
+
+deleteGivenWarrior()
+DELETE FROM Warrior WHERE ID = ?
+
+Selection
+Select UsernamePlayer (Can't select since no longer prim key unless we join), PlayerID, Date and NPCName from Converses where Date is after 2020-01-01
+
+SELECT PlayerID, converseDate, NPCName FROM Converses WHERE converseDate > '2020-01-01'
+
+JOIN
+Join PLayerXPLevel and PLayerCharacter tables to find the levels of all players who are under level 25
+
+SELECT p.ID, p.Username, xp.PlayerLevel FROM PlayerXPLevel as xp, PlayerCharacter as p WHERE xp.XP = p.XP AND xp.PlayerLevel < 25
+
+Aggregation with Having
+Count the number of shop's grouped by Location from Shop_IsIn having the inventory amount greater than or equal to 50
+
+SELECT LocationName, COUNT(ShopName) FROM Shop_IsIn GROUP BY LocationName HAVING InventoryAmount => 50
+
+Division
+Find the players (determined by PLayerID) that have bought an item from a store in all locations
+
+SELECT p.PlayerID, p.PlayerUsername
+FROM PlayerCharacter as p
+WHERE NOT EXISTS(
+          SELECT *
+          FROM Location as l
+          WHERE NOT EXISTS(
+                    SELECT *
+                    FROM BuysFrom as b
+                    WHERE p.PlayerID = b.PlayerID AND
+                    l.LocationName = b.LocationName
+
+findPlayerConverses()
+findAllPlayersWithLevelsUnder25()
+countShopsByLocation()
+findPlayersThatBoughtFromAllLocations()
+
+---------------------------------------------------------------------------------------------------
