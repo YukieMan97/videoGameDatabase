@@ -10,7 +10,7 @@ Our final project is a GUI that allows users to manage data of an online multipl
 
 All queries can be found in the DatabaseConnectionHandler.java class, located in the database folder. The line numbers listed below are the approximate locations of each method that hold the queries.
 
-| Query Type  | Type        |
+| Query Type  | Query       |
 | :---        | :---        |
 | 1. INSERT Operation | Add a new PlayerCharacter to the Assassin subclass with traits specified by the user       |
 | 2. DELETE Operation | Delete a PlayerCharacter, which also deletes the corresponding Warrior tuple with id given by user        |
